@@ -6,7 +6,7 @@ const states = {
 };
 
 //OPTIONAL: replace with "amzn1.ask.skill.[your-unique-value-here]";
-let APP_ID = "amzn1.ask.skill.033d08e5-6bc2-437e-b8a1-8be1b238f655";
+//let APP_ID = "amzn1.ask.skill.033d08e5-6bc2-437e-b8a1-8be1b238f655";
 
 
 // Skills name
@@ -32,23 +32,30 @@ const killSkillMessage = "Ok, great, see you next time.";
 // stores events that are found to be in our date range
 let relevantEvents = new Array();
 
-// Adding session handlers
-const newSessionHandlers = {
-    'LaunchRequest': function () {
-        this.handler.state = states.SEARCHMODE;
-        this.response.speak(skillName + " " + welcomeMessage).listen(welcomeMessage);
-        this.emit(':responseReady');
-    },
-    "userDetailIntent": function()
-    {
-        this.handler.state = states.SEARCHMODE;
-        this.emitWithState("userDetailIntent");
-    },
-    'Unhandled': function () {
-        this.response.speak(HelpMessage).listen(HelpMessage);
-        this.emit(':responseReady');
-    },
+exports.handler = function(event, context, callback) {
+    var alexa = Alexa.handler(event, context);
+    alexa.appId = "amzn1.ask.skill.033d08e5-6bc2-437e-b8a1-8be1b238f655";
+    alexa.registerHandlers(startSearchHandlers);
+    alexa.execute();
 };
+
+// Adding session handlers
+// const newSessionHandlers = {
+    // 'LaunchRequest': function () {
+        // this.handler.state = states.SEARCHMODE;
+        // this.response.speak(skillName + " " + welcomeMessage).listen(welcomeMessage);
+        // this.emit(':responseReady');
+    // },
+    // "userDetailIntent": function()
+    // {
+        // this.handler.state = states.SEARCHMODE;
+        // this.emitWithState("userDetailIntent");
+    // },
+    // 'Unhandled': function () {
+        // this.response.speak(HelpMessage).listen(HelpMessage);
+        // this.emit(':responseReady');
+    // },
+// };
 
 // Create a new handler with a SEARCH state
 const startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
