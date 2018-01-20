@@ -1,0 +1,150 @@
+{
+  "languageModel": {
+    "types": [
+      {
+        "name": "quartertype",
+        "values": [
+          {
+            "id": null,
+            "name": {
+              "value": "this quarter",
+              "synonyms": [
+                "current quarter"
+              ]
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "last quarter",
+              "synonyms": [
+                "previous quarter"
+              ]
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "quarter 1",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "quarter 2",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "quarter 3",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "quarter 4",
+              "synonyms": []
+            }
+          }
+        ]
+      },
+      {
+        "name": "userlist",
+        "values": [
+          {
+            "id": null,
+            "name": {
+              "value": "Umang",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "Rishabh",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "Arpan",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "Rahul",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "Priyanka",
+              "synonyms": []
+            }
+          }
+        ]
+      }
+    ],
+    "intents": [
+      {
+        "name": "AMAZON.CancelIntent",
+        "samples": []
+      },
+      {
+        "name": "AMAZON.HelpIntent",
+        "samples": []
+      },
+      {
+        "name": "AMAZON.RepeatIntent",
+        "samples": []
+      },
+      {
+        "name": "AMAZON.StopIntent",
+        "samples": []
+      },
+      {
+        "name": "performanceDetailIntent",
+        "samples": [
+          "What is the performance of {users} in {quarter}",
+          "Pull out the performance report of {users} ",
+          "Email me the Performance report for {users} for {quarter}",
+          "What is the performance of {users} for {quarter}",
+          "Find the performance of {users} in {quarter}"
+        ],
+        "slots": [
+          {
+            "name": "quarter",
+            "type": "quartertype"
+          },
+          {
+            "name": "users",
+            "type": "userlist"
+          }
+        ]
+      },
+      {
+        "name": "userDetailIntent",
+        "samples": [
+          "Find {users}",
+          "Who is {users}",
+          "Search {users}"
+        ],
+        "slots": [
+          {
+            "name": "users",
+            "type": "userlist"
+          }
+        ]
+      }
+    ],
+    "invocationName": "wingman"
+  }
+}
