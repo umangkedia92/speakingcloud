@@ -29,6 +29,7 @@ const shutdownMessage = "Ok see you again soon.";
 // Used when an event is asked for
 const killSkillMessage = "Ok, great, see you next time.";
 
+let output="";
 // stores events that are found to be in our date range
 let relevantEvents = new Array();
 
