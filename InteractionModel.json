@@ -5,16 +5,17 @@
         "name": "quartertype",
         "values": [
           {
-            "id": null,
+            "id": "tq",
             "name": {
               "value": "this quarter",
               "synonyms": [
-                "current quarter"
+                "current quarter",
+                "present quarter"
               ]
             }
           },
           {
-            "id": null,
+            "id": "lq",
             "name": {
               "value": "last quarter",
               "synonyms": [
@@ -23,28 +24,28 @@
             }
           },
           {
-            "id": null,
+            "id": "q1",
             "name": {
               "value": "quarter 1",
               "synonyms": []
             }
           },
           {
-            "id": null,
+            "id": "q2",
             "name": {
               "value": "quarter 2",
               "synonyms": []
             }
           },
           {
-            "id": null,
+            "id": "q3",
             "name": {
               "value": "quarter 3",
               "synonyms": []
             }
           },
           {
-            "id": null,
+            "id": "q4",
             "name": {
               "value": "quarter 4",
               "synonyms": []
@@ -89,6 +90,62 @@
               "value": "Priyanka",
               "synonyms": []
             }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "Rohit",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "Mahesh",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "Vinay",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "Pallavi",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "Amit",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "Dilip",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "Nemkan",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "Kirti",
+              "synonyms": []
+            }
           }
         ]
       }
@@ -100,7 +157,9 @@
       },
       {
         "name": "AMAZON.HelpIntent",
-        "samples": []
+        "samples": [
+          "Can you help me with that"
+        ]
       },
       {
         "name": "AMAZON.RepeatIntent",
@@ -117,12 +176,28 @@
           "Pull out the performance report of {users} ",
           "Email me the Performance report for {users} for {quarter}",
           "What is the performance of {users} for {quarter}",
-          "Find the performance of {users} in {quarter}"
+          "Find the performance of {users} in {quarter}",
+          "Find the performance in {quarter} for {users}",
+          "What is the performance in {quarter} for {users}",
+          "Send me the Performance report for {users} in {quarter}",
+          "Fetch the performance for {users}",
+          "Send me the performance of {users}"
         ],
         "slots": [
           {
             "name": "quarter",
-            "type": "quartertype"
+            "type": "quartertype",
+            "samples": [
+              "Its {quarter}",
+              "For {quarter}",
+              "I need for {quarter}",
+              "{quarter}",
+              "I need details for {quarter}",
+              "I need report for {quarter}",
+              "{quarter} please",
+              "{quarter} report",
+              "{quarter} details"
+            ]
           },
           {
             "name": "users",
@@ -135,7 +210,10 @@
         "samples": [
           "Find {users}",
           "Who is {users}",
-          "Search {users}"
+          "Search {users}",
+          "Tell me about {users}",
+          "give me details about {users}",
+          "Fetch details about {users}"
         ],
         "slots": [
           {
@@ -146,5 +224,55 @@
       }
     ],
     "invocationName": "wingman"
+  },
+  "prompts": [
+    {
+      "id": "Elicit.Intent-performanceDetailIntent.IntentSlot-quarter",
+      "variations": [
+        {
+          "type": "PlainText",
+          "value": "For which quarter do you want performance report ? "
+        },
+        {
+          "type": "PlainText",
+          "value": "For which quarter ?"
+        },
+        {
+          "type": "PlainText",
+          "value": "Which quarter's report are you looking for ? "
+        },
+        {
+          "type": "PlainText",
+          "value": "Help me out with the quarter details. "
+        }
+      ]
+    }
+  ],
+  "dialog": {
+    "intents": [
+      {
+        "name": "performanceDetailIntent",
+        "confirmationRequired": false,
+        "prompts": {},
+        "slots": [
+          {
+            "name": "quarter",
+            "type": "quartertype",
+            "elicitationRequired": true,
+            "confirmationRequired": false,
+            "prompts": {
+              "elicitation": "Elicit.Intent-performanceDetailIntent.IntentSlot-quarter"
+            }
+          },
+          {
+            "name": "users",
+            "type": "userlist",
+            "elicitationRequired": false,
+            "confirmationRequired": false,
+            "prompts": {}
+          }
+        ]
+      }
+    ]
   }
 }
