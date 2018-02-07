@@ -1,108 +1,85 @@
-const Alexa = require('alexa-sdk');
+const querystring = require("querystring");
+const AWS = require('aws-sdk');
+const wkhtmltopdf = require('wkhtmltopdf');
 
-const states = {
-    SEARCHMODE: '_SEARCHMODE',
-    DESCRIPTION: '_DESKMODE',
-};
+const DEFAULT_FILTER = /\.html?$/; // essentially: *.htm, *.html
+const DEFAULT_PAGESIZE = 'letter';
+const PDF_CONTENTTYPE = 'application/pdf';
 
-//OPTIONAL: replace with "amzn1.ask.skill.[your-unique-value-here]";
-//let APP_ID = "amzn1.ask.skill.033d08e5-6bc2-437e-b8a1-8be1b238f655";
+const filenameFilter = process.env['filename_filter'] || DEFAULT_FILTER;
+const wkhtmltopdfOptions = {
+	pageSize: process.env['page_size'] || DEFAULT_PAGESIZE,
+	headerLeft: process.env['header_left'] || '',
+	headerCenter: process.env['header_center'] || '',
+	headerRight: process.env['header_right'] || '',
+	footerLeft: process.env['footer_left'] || '',
+	footerCenter: process.env['footer_center'] || '',
+	footerRight: process.env['footer_right'] || '',
+	zoom: process.env['page_zoom'] || 1,
+	disableJavascript: ( String(process.env['disable_javascript']).toLowerCase() === 'true' ),
+	printMediaType: ( String(process.env['print_media_type']).toLowerCase() === 'true' ),
+
+	enableForms: ( String(process.env['enable_forms']).toLowerCase() === 'true' ),
+	disableExternalLinks: ( String(process.env['disable_external_links']).toLowerCase() === 'true' ),
+	noBackground: ( String(process.env['no_background']).toLowerCase() === 'true' ),
+	noImages: ( String(process.env['no_images']).toLowerCase() === 'true' ),
+	grayscale: ( String(process.env['grayscale']).toLowerCase() === 'true' ),
+
+	disableLocalFileAccess: true // Non-configurable
+}
+
+process.env['PATH'] = process.env['PATH'] + ':' + process.env['LAMBDA_TASK_ROOT'];
+
+const s3 = new AWS.S3();
 
 
-// Skills name
-const skillName = "Digital Assistant";
-
-// Message when the skill is first called
-const welcomeMessage = "You can ask for the Employees today. Search for Employees or fetch performance reports by date. or say help. What would you like? ";
-
-// Message for help intent
-const HelpMessage = "Here are some things you can say: Find Umang. Find Performance of Umang in Quarter 1.";
-
-const descriptionStateHelpMessage = "Here are some things you can say: Pull out the performance of Umang";
-
-// Used when there is no data within a time period
-const NoDataMessage = "Sorry there aren't any Employees and reports. Would you like to try again?";
-
-// Used to tell user skill is closing
-const shutdownMessage = "Ok see you again soon.";
-
-// Used when an event is asked for
-const killSkillMessage = "Ok, great, see you next time.";
-
-let output="";
-// stores events that are found to be in our date range
-let relevantEvents = new Array();
-
+console.info('Initializing', JSON.stringify(wkhtmltopdfOptions, null, 2));
 exports.handler = function(event, context, callback) {
-    var alexa = Alexa.handler(event, context);
-    alexa.appId = "amzn1.ask.skill.033d08e5-6bc2-437e-b8a1-8be1b238f655";
-    alexa.registerHandlers(startSearchHandlers);
-    alexa.execute();
+	const region = event.Records[0].awsRegion;
+	const bucket = event.Records[0].s3.bucket.name;
+	const key = event.Records[0].s3.object.key;
+	const input_filename = decodeURIComponent(key.replace(/\+/g, ' '));
+	const output_filename = key.replace(/\.[^.]+$/, '') + ".pdf"; // remove file extension, concat ".pdf"
+	console.info('Invocation state =', JSON.stringify({
+		region: region,
+		bucket: bucket,
+		key: key,
+		input_filename: input_filename,
+		output_filename: output_filename
+	}, null, 2));
+
+	if ( ! input_filename.match(filenameFilter) ) {
+		console.info("Skipping", input_filename, "due to filter");
+		callback(null, "No action taken.");
+		return;
+	}
+
+	const url = 'https://s3.amazonaws.com/' +  bucket + '/' + key;
+	console.log('Generating PDF for', url);
+
+	// Convert to PDF
+	wkhtmltopdf(url, function(error, stream) {
+		
+		console.log('PDF generation was successful. Starting S3 upload...');
+
+		// Upload to S3
+		const s3PutParams = {
+			Bucket: bucket,
+			Key: output_filename,
+			Body: stream.read(), //getting error here -> cannot read property 'read' of undefined
+			ContentType: PDF_CONTENTTYPE,
+			Metadata: { "x-amz-meta-requestId": context.awsRequestId },
+			Tagging: querystring.stringify({ source: context.invokedFunctionArn })
+		};
+		s3.putObject(s3PutParams, function(error, data) {
+			if ( error ) {
+				console.error('s3:putObject failed!');
+				callback(error);
+				return;
+			}
+
+			console.log(output_filename, 'was uploaded successfully.');
+			callback(null, 'Success');
+		});
+	});
 };
-
-// Adding session handlers
-// const newSessionHandlers = {
-    // 'LaunchRequest': function () {
-        // this.handler.state = states.SEARCHMODE;
-        // this.response.speak(skillName + " " + welcomeMessage).listen(welcomeMessage);
-        // this.emit(':responseReady');
-    // },
-    // "userDetailIntent": function()
-    // {
-        // this.handler.state = states.SEARCHMODE;
-        // this.emitWithState("userDetailIntent");
-    // },
-    // 'Unhandled': function () {
-        // this.response.speak(HelpMessage).listen(HelpMessage);
-        // this.emit(':responseReady');
-    // },
-// };
-
-// Create a new handler with a SEARCH state
-const startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
-   
-    'AMAZON.RepeatIntent': function () {
-        this.response.speak(output).listen(HelpMessage);
-    },
-
-    'userDetailIntent': function () {
-        // Declare variables
-        let eventList = new Array();
-        const slotValue = this.event.request.intent.slots.users.value;
-        if (slotValue != undefined)
-        {
-            this.response.speak(slotValue + " is a Employee of Deloitte with BTA as the designation");
-			this.emit(':responseReady');
-            
-        }
-        else{
-            this.response.speak("I'm sorry. I did not get that").listen("I'm sorry. I did not get that");
-        }
-
-        this.emit(':responseReady');
-    },
-
-    'AMAZON.HelpIntent': function () {
-        output = HelpMessage;
-        this.response.speak(output).listen(output);
-        this.emit(':responseReady');
-    },
-
-    'AMAZON.StopIntent': function () {
-        this.response.speak(killSkillMessage);
-    },
-
-    'AMAZON.CancelIntent': function () {
-        this.response.speak(killSkillMessage);
-    },
-
-    'SessionEndedRequest': function () {
-        this.emit('AMAZON.StopIntent');
-    },
-
-    'Unhandled': function () {
-        this.response.speak(HelpMessage).listen(HelpMessage);
-        this.emit(':responseReady');
-    }
-});
-
