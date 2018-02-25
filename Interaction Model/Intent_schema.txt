@@ -1,0 +1,45 @@
+{
+  "intents": [
+    {
+      "intent": "AMAZON.CancelIntent"
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "AMAZON.RepeatIntent"
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    },
+    {
+      "slots": [
+        {
+          "name": "quarter",
+          "type": "quartertype"
+        },
+        {
+          "name": "users",
+          "type": "userlist"
+        },
+        {
+          "name": "year",
+          "type": "year"
+        }
+      ],
+      "intent": "performanceDetailIntent"
+    },
+    {
+      "intent": "SendMail"
+    },
+    {
+      "slots": [
+        {
+          "name": "users",
+          "type": "userlist"
+        }
+      ],
+      "intent": "userDetailIntent"
+    }
+  ]
+}

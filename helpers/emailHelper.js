@@ -12,14 +12,14 @@ var transporter = nodemailer.createTransport({
           domains: ["gmail.com", "googlemail.com"],
 	  auth: {
 		  //TODO: Add Id & Password here
-		user: 'allizzreal@gmail.com',
-		pass: 'youtuber7'
+		user: '<User_id>',
+		pass: '<pwd>'
 	 }
   });
 
 var mailOptions = {
-		 //TODO: Change from Id and pick "To" & s3 bucket url from DB
-	  from: 'allizzreal@gmail.com',
+		 //TODO: Change from Id.
+	  from: '<User_id>',
 	  to: email,
 	  subject: 'Sending Email using Alexa Skill',
 	  html: html

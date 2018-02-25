@@ -1,0 +1,57 @@
+1st :->
+********************************
+Type: 
+
+quartertype
+********************************
+Value:
+
+this quarter
+last quarter
+quarter 1
+quarter 2
+quarter 3
+quarter 4
+**********************************
+
+
+
+
+2nd:->
+********************************
+Type: 
+
+userlist
+********************************
+Value:
+
+Umang
+Rishabh
+Arpan
+Rahul
+Priyanka
+Rohit
+Mahesh
+Vinay
+Pallavi
+Amit
+Dilip
+Nemkan
+Kirti
+**********************************
+
+
+
+
+3rd:->
+********************************
+Type: 
+
+year
+********************************
+Value:
+
+previous year
+current year
+**********************************
+ 

@@ -1,0 +1,23 @@
+AMAZON.HelpIntent Can you help me with that
+performanceDetailIntent What is the performance of {users} in {quarter}
+performanceDetailIntent Pull out the performance report of {users}
+performanceDetailIntent Email me the Performance report for {users} for {quarter}
+performanceDetailIntent What is the performance of {users} for {quarter}
+performanceDetailIntent Find the performance of {users} in {quarter}
+performanceDetailIntent Find the performance in {quarter} for {users}
+performanceDetailIntent What is the performance in {quarter} for {users}
+performanceDetailIntent Send me the Performance report for {users} in {quarter}
+performanceDetailIntent Fetch the performance for {users}
+performanceDetailIntent Send me the performance of {users}
+performanceDetailIntent Send me the performance of {users} for {year}
+performanceDetailIntent Fetch the performance for {users} for {year}
+performanceDetailIntent Find the performance in {quarter} for {users} for {year}
+performanceDetailIntent What is the performance of {users} for {quarter} for {year}
+performanceDetailIntent Fetch the performance of {users} for {year}
+SendMail send me mail
+userDetailIntent Find {users}
+userDetailIntent Who is {users}
+userDetailIntent Search {users}
+userDetailIntent Tell me about {users}
+userDetailIntent give me details about {users}
+userDetailIntent Fetch details about {users}
